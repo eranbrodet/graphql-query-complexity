@@ -268,6 +268,6 @@ func (l *Lexer) consumeComment() {
 }
 
 // CatchScannerError handles errors during message scanning
-func (l *Lexer) CatchScannerError(s *scanner.Scanner, msg string) {
+func (l *Lexer) CatchScannerError(_ *scanner.Scanner, msg string) {
 	l.SyntaxError(msg)
 }
