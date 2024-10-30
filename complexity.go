@@ -2,6 +2,7 @@
 package complexity
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -166,11 +167,18 @@ func getConnectionNodeCount(args types.ArgumentList, variables map[string]interf
 			case *types.PrimitiveValue:
 				itemCount, _ = strconv.Atoi(arg.String())
 			case *types.Variable:
-				variableValue, ok := variables[a.Name.Name]
+
+				variableValue, ok := variables[arg.Name]
 				if !ok {
 					return 0, fmt.Errorf("Variable %s not defined", a.Name.Name)
 				}
+
 				switch i := variableValue.(type) {
+				case json.Number:
+					value, err := i.Int64()
+					if err == nil {
+						itemCount = int(value)
+					}
 				case float64:
 					itemCount = int(i)
 				case float32:

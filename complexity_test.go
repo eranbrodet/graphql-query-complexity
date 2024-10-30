@@ -1,6 +1,7 @@
 package complexity_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -43,6 +44,20 @@ func TestGetQueryComplexity(t *testing.T) {
 			  }`,
 			variables:      map[string]interface{}{"first": float64(5)},
 			wantComplexity: 7,
+		},
+		{
+			name: "Connection with 1005 items using a variable with other name, and json value",
+			query: `query GetGroups($arg: Int){
+				groups(first: $arg, sort: FULL_PATH_ASC) {
+				  edges {
+					node {
+					  id
+					}
+				  }
+				}
+			  }`,
+			variables:      map[string]interface{}{"arg": json.Number("1005")},
+			wantComplexity: 1007,
 		},
 		{
 			name: "query with nested fragments",
